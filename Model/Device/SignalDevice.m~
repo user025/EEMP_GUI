@@ -1,0 +1,19 @@
+classdef SignalDevice < BaseDevice
+    methods
+        function [obj]=SignalDevice()
+            obj = obj@Device()
+        end
+        function [statu]=UpLoadParser(obj)
+            statu = 1
+        end
+        function [statu]=DownLoadParser(obj)
+            statu = 1
+        end
+        function [statu]=UpLoad(obj)
+            statu = 1
+        end
+        function [statu]=DownLoad(obj)
+            statu = 1
+        end
+    end
+end

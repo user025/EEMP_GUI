@@ -1,0 +1,21 @@
+classdef BaseDevice 
+    methods
+        function [obj]=BaseDevice()
+            'hello'
+        end
+        function [statu]=DownLoad(obj)
+            'Download'
+        end
+        function [statu]=UpLoad(obj)
+            'UpLoad'
+        end
+        function [statu]=DownLoadParser(obj)
+            'DownLoadParser'
+        end
+        function [statu]=UpLoadParser(obj)
+            'UpLoadParser'
+        end
+    end
+
+
+
