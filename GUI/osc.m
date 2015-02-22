@@ -23,7 +23,7 @@ function varargout = osc(varargin)
 
 % Edit the above text to modify the response to help osc
 
-% Last Modified by GUIDE v2.5 15-Feb-2015 18:58:39
+% Last Modified by GUIDE v2.5 21-Feb-2015 19:38:51
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -189,7 +189,20 @@ function MathPopupFunction_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns MathPopupFunction contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from MathPopupFunction
-
+    selected = get(hObject, 'Value');
+    file_names = get(hObject, 'String');
+    [n m] = size(file_names);
+    len = n*m;
+    offset = selected;
+    if (selected>0)
+        indexs = offset:n:len;
+        function_name = ['help_' strtrim(file_names(indexs))];
+        file_path = ['Functions/' function_name];
+        file = fopen(file_path);
+        help_msg = fread(file, '*char');
+        help_msg = help_msg';
+    end
+    set(handles.MathTextFunctionDescription, 'String', help_msg);
 
 % --- Executes during object creation, after setting all properties.
 function MathPopupFunction_CreateFcn(hObject, eventdata, handles)
@@ -199,10 +212,19 @@ function MathPopupFunction_CreateFcn(hObject, eventdata, handles)
 
 % Hint: popupmenu controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
+    files = dir('Functions');
+    title = get(hObject,'String');
+    len = length(files);
+    for i=1:len
+        if strfind(files(i).name, 'math') 
+            name = files(i).name;
+            n = length(name);
+            name = name(6:n-2);
+            title = strvcat(title, name);
+        end
+    end
+    set(hObject, 'String', title);
+    
 
 % --- Executes on selection change in MathPupupArg1.
 function MathPupupArg1_Callback(hObject, eventdata, handles)
@@ -236,8 +258,6 @@ function MathEditTextOptionalArg_Callback(hObject, eventdata, handles)
 % Hints: get(hObject,'String') returns contents of MathEditTextOptionalArg as text
 %        str2double(get(hObject,'String')) returns contents of MathEditTextOptionalArg as a double
 
-
-% --- Executes during object creation, after setting all properties.
 function MathEditTextOptionalArg_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to MathEditTextOptionalArg (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -439,7 +459,7 @@ function cursor_paint(axes_object,X,Y,pre_label)
 function cursor_msg_display(text_object,description,delta)
     msg = get(text_object', 'String');
     msg_poi =  strfind(msg, description);
-    new_msg = [description, num2str(delta),';'];
+    new_msg = [description, ' ',num2str(delta),';'];
     new_msg = sprintf('%-18s',new_msg);
     if (~isempty(msg_poi))
         old_msg = msg(msg_poi:msg_poi+17);
